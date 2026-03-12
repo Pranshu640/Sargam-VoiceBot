@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SARGAM
 
-## Getting Started
+**AI-Powered Multilingual Voice Calling Agent Platform for India**
 
-First, run the development server:
+> Real-time voice conversations powered by a cascading STT → LLM → TTS pipeline, supporting 11 Indian languages — built entirely on free-tier services.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Live Demo:** [https://sargam-voice-bot.vercel.app](https://sargam-voice-bot.vercel.app)
+
+---
+
+## What is Sargam?
+
+Sargam is an AI voice agent platform designed for the Indian market. It enables real-time, multilingual voice conversations between users and AI agents across multiple use cases — from marketing calls to grievance redressal. The platform uses browser-native speech APIs combined with a powerful LLM backbone to deliver a seamless voice experience with zero paid dependencies.
+
+## Architecture
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Browser STT   │────▶│   Groq LLM      │────▶│   Browser TTS   │
+│  (Web Speech    │     │  (Llama 3.3     │     │  (Speech        │
+│   API)          │     │   70B)          │     │   Synthesis)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        ▲                       │                       │
+        │               ┌──────┴──────┐                 │
+        │               │  Tool Calls │                 ▼
+        │               │  & Info     │           Audio Output
+   Microphone           │  Extraction │           to Speaker
+    Input               └─────────────┘
+        ▲
+  ┌─────┴──────┐
+  │  VAD       │   Voice Activity Detection
+  │  (ONNX)   │   filters silence & noise
+  └────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The pipeline orchestrator manages the full lifecycle: VAD detects speech → STT transcribes → LLM generates a contextual response → TTS speaks the reply. All processing happens in real-time with automatic turn-taking.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Layer | Technology | Cost |
+|-------|-----------|------|
+| **Framework** | Next.js 16 (App Router, React 19) | Free |
+| **Styling** | Tailwind CSS v4 | Free |
+| **LLM** | Groq API — Llama 3.3 70B | Free tier |
+| **STT** | Browser Web Speech API | Free (native) |
+| **TTS** | Browser Speech Synthesis API | Free (native) |
+| **VAD** | @ricky0123/vad-web + onnxruntime-web | Free |
+| **Database** | Convex (real-time) | Free tier |
+| **Hosting** | Vercel | Free tier |
 
-## Learn More
+**Total cost: $0**
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Real-time voice conversations** — Full-duplex voice pipeline with automatic turn detection
+- **11 Indian languages** — Hindi, Bengali, Telugu, Marathi, Tamil, Gujarati, Kannada, Malayalam, Odia, Punjabi, and English
+- **6 agent modes** — Marketing, Inbound Helpline, Outbound Survey, Grievance Redressal, Appointment Booking, Outbound Outreach
+- **Voice Activity Detection** — ONNX-powered VAD filters background noise for clean speech capture
+- **Live transcript** — Real-time conversation transcript with interim speech display
+- **Live info sheet** — Extracted data fields, notes, and tickets from conversations
+- **Call history** — Session-based call logs with full transcripts
+- **Post-call summary** — Duration, turn count, and sentiment analysis after each call
+- **Mute controls** — Independent mic mute and TTS mute
+- **Dashboard & Campaigns** — Call analytics and campaign management views
+- **Brutalist UI** — Distinctive black-and-white military-aesthetic design system
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Supported Languages
 
-## Deploy on Vercel
+| Language | Code | Native Name |
+|----------|------|-------------|
+| Hindi | hi-IN | हिन्दी |
+| Bengali | bn-IN | বাংলা |
+| Telugu | te-IN | తెలుగు |
+| Marathi | mr-IN | मराठी |
+| Tamil | ta-IN | தமிழ் |
+| Gujarati | gu-IN | ગુજરાતી |
+| Kannada | kn-IN | ಕನ್ನಡ |
+| Malayalam | ml-IN | മലയാളം |
+| Odia | or-IN | ଓଡ଼ିଆ |
+| Punjabi | pa-IN | ਪੰਜਾਬੀ |
+| English | en-IN | English |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Agent Modes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Mode | Description |
+|------|-------------|
+| **Sargam Marketing** | Default mode — introduces Sargam's AI voice platform to potential customers |
+| **Inbound Helpline** | Handles incoming support calls with empathy and resolution |
+| **Outbound Survey** | Conducts structured surveys and collects responses |
+| **Grievance Redressal** | Logs complaints, creates tickets, and escalates when needed |
+| **Appointment Booking** | Schedules appointments with date/time negotiation |
+| **Outbound Outreach** | General outbound engagement and follow-ups |
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+- A Groq API key ([get one free](https://console.groq.com))
+- A Convex deployment ([create one free](https://www.convex.dev))
+
+### Setup
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd sargam-frontend
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.local.example .env.local
+# Edit .env.local and add your keys:
+#   GROQ_API_KEY=gsk_...
+#   NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
+
+# Start Convex (in a separate terminal)
+npx convex dev
+
+# Start the development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in Chrome for the best experience.
+
+### Build
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```
+sargam-frontend/
+├── app/
+│   ├── layout.tsx                 # Root layout (fonts, global styles)
+│   ├── page.tsx                   # Landing page
+│   ├── globals.css                # Brutalist design system
+│   ├── api/chat/route.ts          # Groq API proxy (server-side)
+│   └── (app)/
+│       ├── layout.tsx             # App shell (Convex + Store + Sidebar)
+│       ├── call/page.tsx          # Voice call interface
+│       ├── dashboard/page.tsx     # Analytics dashboard
+│       └── campaigns/page.tsx     # Campaign management
+├── components/
+│   ├── Sidebar.tsx                # Navigation
+│   ├── LiveInfoSheet.tsx          # Real-time data extraction display
+│   └── ConvexClientProvider.tsx   # Convex wrapper
+├── lib/
+│   ├── store.tsx                  # Convex-backed state management
+│   ├── prompts.ts                 # Agent system prompts & tool definitions
+│   └── pipeline/
+│       ├── orchestrator.ts        # Pipeline lifecycle & turn management
+│       ├── stt.ts                 # Speech-to-text engine
+│       ├── llm.ts                 # LLM engine (Groq)
+│       ├── tts.ts                 # Text-to-speech engine
+│       └── vad.ts                 # Voice activity detection
+├── types/
+│   └── index.ts                   # TypeScript types & constants
+└── convex/
+    ├── schema.ts                  # Database schema
+    ├── calls.ts                   # Call CRUD operations
+    ├── campaigns.ts               # Campaign operations
+    ├── grievances.ts              # Grievance/ticket operations
+    └── stats.ts                   # Analytics queries
+```
+
+## Browser Compatibility
+
+- **Chrome (Recommended)** — Full support for Web Speech API STT + TTS
+- **Edge** — Good support via Chromium engine
+- **Firefox** — Limited STT support
+- **Safari** — Partial support; some TTS voices may differ
+
+A microphone is required for voice calls.
+
+---
+
+Built for India. Powered by open-source AI.

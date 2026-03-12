@@ -2,6 +2,8 @@
 // Sargam AI Voice Agent — Core Type Definitions
 // ============================================================
 
+import type { AgentMode } from '@/lib/prompts';
+
 export interface TranscriptEntry {
   role: 'user' | 'agent' | 'system';
   text: string;
@@ -24,6 +26,51 @@ export interface Call {
   callerPhone?: string;
   startedAt: number;
   endedAt?: number;
+  agentMode?: AgentMode;
+  liveSheet?: LiveSheetData;
+}
+
+// ── Live Info Sheet (filled by AI during call) ──
+
+export interface LiveSheetField {
+  field: string;
+  value: string;
+  timestamp: number;
+}
+
+export interface LiveSheetNote {
+  category: 'note' | 'action_item' | 'decision' | 'concern' | 'milestone';
+  content: string;
+  timestamp: number;
+}
+
+export interface LiveSheetTicket {
+  category: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  ticketId: string;
+  timestamp: number;
+}
+
+export interface LiveSheetData {
+  extractedFields: LiveSheetField[];
+  notes: LiveSheetNote[];
+  tickets: LiveSheetTicket[];
+}
+
+export function createEmptyLiveSheet(): LiveSheetData {
+  return {
+    extractedFields: [],
+    notes: [],
+    tickets: [],
+  };
+}
+
+// ── Tool Call Types ──
+
+export interface ToolCallResult {
+  name: string;
+  arguments: Record<string, unknown>;
 }
 
 export interface Campaign {
@@ -76,7 +123,7 @@ export interface DashboardStats {
 
 export interface PipelineConfig {
   language: string;
-  useCase: 'inbound' | 'outbound_survey' | 'outbound_outreach' | 'grievance';
+  useCase: AgentMode;
   campaignScript?: string;
   voiceGender?: 'male' | 'female';
 }

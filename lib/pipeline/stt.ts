@@ -1,6 +1,12 @@
 // ============================================================
-// Sargam AI — Speech-to-Text Engine (Web Speech API)
+// Sargam AI - Speech-to-Text Engine (Web Speech API)
 // Free, browser-native, supports multiple Indian languages
+//
+// Fixed:
+//   - Removed internal auto-restart in onend handler
+//   - Orchestrator is now the sole owner of restart logic
+//   - This eliminates the double-restart race condition
+//   - Added isStarting guard to prevent InvalidStateError
 // ============================================================
 
 // Web Speech API type declarations
@@ -64,6 +70,7 @@ export interface STTConfig {
 export class SpeechToTextEngine {
   private recognition: SpeechRecognitionInstance | null = null;
   private isListening: boolean = false;
+  private isStarting: boolean = false; // Guard against double-start
   private config: STTConfig;
 
   constructor(config: STTConfig) {
@@ -81,7 +88,10 @@ export class SpeechToTextEngine {
       return false;
     }
 
-    if (this.isListening) return true;
+    // Prevent double-start which causes InvalidStateError
+    if (this.isListening || this.isStarting) return true;
+
+    this.isStarting = true;
 
     const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognitionClass();
@@ -101,33 +111,33 @@ export class SpeechToTextEngine {
     this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (event.error === 'no-speech') return;
       if (event.error === 'aborted') return;
-      this.config.onError(`Speech recognition error: ${event.error}`);
+      this.config.onError('Speech recognition error: ' + event.error);
     };
 
+    // CRITICAL FIX: No auto-restart here.
+    // The orchestrator is the sole owner of restart logic.
+    // When recognition ends (for any reason), we just notify via onEnd.
     this.recognition.onend = () => {
-      if (this.isListening) {
-        try {
-          this.recognition?.start();
-        } catch {
-          this.config.onEnd();
-        }
-      } else {
-        this.config.onEnd();
-      }
+      this.isListening = false;
+      this.isStarting = false;
+      this.config.onEnd();
     };
 
     try {
       this.recognition.start();
       this.isListening = true;
+      this.isStarting = false;
       return true;
     } catch (err) {
-      this.config.onError(`Failed to start speech recognition: ${err}`);
+      this.isStarting = false;
+      this.config.onError('Failed to start speech recognition: ' + err);
       return false;
     }
   }
 
   stop(): void {
     this.isListening = false;
+    this.isStarting = false;
     if (this.recognition) {
       try {
         this.recognition.stop();

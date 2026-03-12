@@ -7,100 +7,69 @@ import {
   Phone,
   Megaphone,
   ArrowLeft,
-  Activity,
-  Settings,
-  HelpCircle,
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/call', label: 'Live Call', icon: Phone },
-  { href: '/campaigns', label: 'Campaigns', icon: Megaphone },
+  { href: '/dashboard', label: 'DASHBOARD', icon: LayoutDashboard },
+  { href: '/call', label: 'LIVE CALL', icon: Phone },
+  { href: '/campaigns', label: 'CAMPAIGNS', icon: Megaphone },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950">
+    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r-[2px] border-white/20 bg-black/40 backdrop-blur-3xl">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 border-b border-slate-800 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
-          <Activity className="h-4 w-4 text-white" />
-        </div>
-        <Link href="/" className="text-lg font-bold text-white">
-          Sargam
+      <div className="flex h-24 items-center justify-center border-b-[2px] border-white/20">
+        <Link href="/" className="text-3xl font-black tracking-tighter uppercase text-white hover:opacity-75 transition-opacity">
+          SARGAM
         </Link>
-        <span className="ml-auto rounded-full bg-indigo-500/10 px-2 py-0.5 text-xs font-medium text-indigo-400">
-          MVP
-        </span>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-4">
-        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-          Main
+      <nav className="flex-1 space-y-4 p-6 overflow-y-auto">
+        <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">
+          SYSTEM MENU
         </p>
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
-                isActive
-                  ? 'bg-indigo-500/10 text-indigo-400'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
-              }`}
-            >
-              <Icon className={`h-5 w-5 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
-              {item.label}
-              {item.label === 'Live Call' && (
-                <span className="ml-auto flex h-2 w-2">
-                  <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                </span>
-              )}
-            </Link>
-          );
-        })}
-
-        <div className="my-6 border-t border-slate-800" />
-
-        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-          System
-        </p>
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
-        >
-          <Settings className="h-5 w-5 text-slate-500" />
-          Settings
-        </Link>
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
-        >
-          <HelpCircle className="h-5 w-5 text-slate-500" />
-          Help & Docs
-        </Link>
+        <div className="space-y-3">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-4 px-4 py-4 text-sm font-bold tracking-widest transition-all ${isActive
+                  ? 'glass-brutal text-white'
+                  : 'text-zinc-500 hover:text-white border-[1px] border-transparent hover:border-white/20'
+                  }`}
+              >
+                <Icon className="h-5 w-5 stroke-[2.5]" />
+                {item.label}
+                {item.label === 'LIVE CALL' && (
+                  <span className="ml-auto inline-flex h-2 w-2 rounded-none bg-white shadow-[0_0_10px_white] animate-pulse" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
-      {/* Back to landing */}
-      <div className="border-t border-slate-800 p-4">
+      {/* Bottom */}
+      <div className="border-t-[2px] border-white/20 p-6">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 transition-all hover:bg-slate-800/50 hover:text-slate-200"
+          className="glass-brutal-btn-alt flex items-center justify-center gap-3 w-full py-3 text-xs mb-4"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Home
+          ROOT ACCESS
         </Link>
-        <div className="mt-3 rounded-lg bg-slate-900 p-3">
-          <p className="text-xs font-medium text-slate-300">Pipeline Status</p>
-          <div className="mt-1 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
-            <span className="text-xs text-slate-400">All systems operational</span>
+        <div className="glass-brutal p-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">TELEMETRY</p>
+          <div className="flex items-center gap-3">
+            <span className="h-3 w-3 bg-white rounded-none shadow-[0_0_8px_white] animate-pulse" />
+            <span className="text-xs font-bold tracking-widest text-white">ONLINE</span>
           </div>
         </div>
       </div>

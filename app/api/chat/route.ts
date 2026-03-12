@@ -1,5 +1,6 @@
 // ============================================================
 // Sargam AI — Groq LLM API Route (Keeps API key server-side)
+// Supports tool calling / function calling
 // ============================================================
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -12,22 +13,22 @@ export async function POST(req: NextRequest) {
   if (!apiKey) {
     return NextResponse.json(
       { error: 'GROQ_API_KEY not configured. Add it to .env.local' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
   try {
     const body = await req.json();
-    const { messages, model, temperature, max_tokens, stream } = body;
+    const { messages, model, temperature, max_tokens, stream, tools, tool_choice } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
         { error: 'messages array is required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const groqBody = {
+    const groqBody: Record<string, unknown> = {
       model: model || 'llama-3.3-70b-versatile',
       messages,
       temperature: temperature ?? 0.7,
@@ -35,10 +36,16 @@ export async function POST(req: NextRequest) {
       stream: stream ?? false,
     };
 
+    // Add tool calling if tools are provided
+    if (tools && Array.isArray(tools) && tools.length > 0) {
+      groqBody.tools = tools;
+      groqBody.tool_choice = tool_choice || 'auto';
+    }
+
     const groqResponse = await fetch(GROQ_API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(groqBody),
@@ -49,7 +56,7 @@ export async function POST(req: NextRequest) {
       console.error('Groq API error:', groqResponse.status, errorText);
       return NextResponse.json(
         { error: `Groq API error: ${groqResponse.status}` },
-        { status: groqResponse.status }
+        { status: groqResponse.status },
       );
     }
 
@@ -64,25 +71,29 @@ export async function POST(req: NextRequest) {
         headers: {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
+          Connection: 'keep-alive',
         },
       });
     }
 
-    // Non-streaming: parse and return
+    // Non-streaming: parse and return full response (including tool_calls)
     const data = await groqResponse.json();
-    const content = data.choices?.[0]?.message?.content || '';
+    const message = data.choices?.[0]?.message;
+    const content = message?.content || '';
+    const toolCalls = message?.tool_calls || null;
 
     return NextResponse.json({
       content,
+      tool_calls: toolCalls,
       usage: data.usage,
       model: data.model,
+      finish_reason: data.choices?.[0]?.finish_reason,
     });
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

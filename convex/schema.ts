@@ -1,12 +1,6 @@
 // ============================================================
 // Sargam AI — Convex Database Schema
-// Ready for upgrade from localStorage to real-time DB
-// ============================================================
-// To use:
-//   1. npm install convex (already done)
-//   2. npx convex init
-//   3. Copy this file to convex/schema.ts
-//   4. npx convex dev
+// Real-time persistence for calls, campaigns, and grievances
 // ============================================================
 
 import { defineSchema, defineTable } from "convex/server";
@@ -41,6 +35,34 @@ export default defineSchema({
     callerPhone: v.optional(v.string()),
     startedAt: v.number(),
     endedAt: v.optional(v.number()),
+    agentMode: v.optional(v.string()),
+    liveSheet: v.optional(
+      v.object({
+        extractedFields: v.array(
+          v.object({
+            field: v.string(),
+            value: v.string(),
+            timestamp: v.number(),
+          })
+        ),
+        notes: v.array(
+          v.object({
+            category: v.string(),
+            content: v.string(),
+            timestamp: v.number(),
+          })
+        ),
+        tickets: v.array(
+          v.object({
+            category: v.string(),
+            description: v.string(),
+            priority: v.string(),
+            ticketId: v.string(),
+            timestamp: v.number(),
+          })
+        ),
+      })
+    ),
   })
     .index("by_status", ["status"])
     .index("by_startedAt", ["startedAt"])

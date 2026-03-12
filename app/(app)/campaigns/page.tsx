@@ -16,7 +16,6 @@ import {
   ChevronRight,
   BarChart3,
   Target,
-  X,
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { Campaign, SUPPORTED_LANGUAGES } from '@/types';
@@ -30,36 +29,36 @@ const CAMPAIGN_TYPE_CONFIG: Record<
   { label: string; color: string; bg: string; border: string; icon: string; barColor: string }
 > = {
   survey: {
-    label: 'Survey',
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10',
-    border: 'border-violet-500/30',
-    icon: 'violet',
-    barColor: 'bg-violet-500',
+    label: 'SURVEY',
+    color: 'text-white',
+    bg: 'bg-zinc-800',
+    border: 'border-white',
+    icon: 'white',
+    barColor: 'bg-white',
   },
   outreach: {
-    label: 'Outreach',
-    color: 'text-indigo-400',
-    bg: 'bg-indigo-500/10',
-    border: 'border-indigo-500/30',
-    icon: 'indigo',
-    barColor: 'bg-indigo-500',
+    label: 'OUTREACH',
+    color: 'text-white',
+    bg: 'bg-zinc-800',
+    border: 'border-white',
+    icon: 'white',
+    barColor: 'bg-white',
   },
   reminder: {
-    label: 'Reminder',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/30',
-    icon: 'amber',
-    barColor: 'bg-amber-500',
+    label: 'REMINDER',
+    color: 'text-white',
+    bg: 'bg-zinc-800',
+    border: 'border-white',
+    icon: 'white',
+    barColor: 'bg-white',
   },
   grievance: {
-    label: 'Grievance',
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/30',
-    icon: 'red',
-    barColor: 'bg-red-500',
+    label: 'GRIEVANCE',
+    color: 'text-white',
+    bg: 'bg-zinc-800',
+    border: 'border-white',
+    icon: 'white',
+    barColor: 'bg-white',
   },
 };
 
@@ -67,24 +66,24 @@ const STATUS_CONFIG: Record<
   Campaign['status'],
   { label: string; color: string; bg: string; pulse: boolean }
 > = {
-  draft: { label: 'Draft', color: 'text-slate-400', bg: 'bg-slate-500/15', pulse: false },
-  active: { label: 'Active', color: 'text-emerald-400', bg: 'bg-emerald-500/15', pulse: true },
-  paused: { label: 'Paused', color: 'text-amber-400', bg: 'bg-amber-500/15', pulse: false },
-  completed: { label: 'Completed', color: 'text-blue-400', bg: 'bg-blue-500/15', pulse: false },
+  draft: { label: 'DRAFT', color: 'text-zinc-500', bg: 'bg-zinc-900', pulse: false },
+  active: { label: 'ACTIVE', color: 'text-black', bg: 'bg-white', pulse: true },
+  paused: { label: 'PAUSED', color: 'text-white', bg: 'bg-zinc-600', pulse: false },
+  completed: { label: 'COMPLETED', color: 'text-zinc-300', bg: 'bg-zinc-800', pulse: false },
 };
 
 const LANG_NAME_MAP: Record<string, string> = {
-  'en-IN': 'English (India)',
-  'hi-IN': 'Hindi',
-  'ta-IN': 'Tamil',
-  'te-IN': 'Telugu',
-  'bn-IN': 'Bengali',
-  'kn-IN': 'Kannada',
-  'ml-IN': 'Malayalam',
-  'mr-IN': 'Marathi',
-  'gu-IN': 'Gujarati',
-  'pa-IN': 'Punjabi',
-  'or-IN': 'Odia',
+  'en-IN': 'ENGLISH',
+  'hi-IN': 'HINDI',
+  'ta-IN': 'TAMIL',
+  'te-IN': 'TELUGU',
+  'bn-IN': 'BENGALI',
+  'kn-IN': 'KANNADA',
+  'ml-IN': 'MALAYALAM',
+  'mr-IN': 'MARATHI',
+  'gu-IN': 'GUJARATI',
+  'pa-IN': 'PUNJABI',
+  'or-IN': 'ODIA',
 };
 
 function formatDate(ts: number): string {
@@ -92,72 +91,8 @@ function formatDate(ts: number): string {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-  });
+  }).toUpperCase();
 }
-
-function generateMockContacts() {
-  const names = [
-    'Aarav Sharma',
-    'Priya Patel',
-    'Rohan Gupta',
-    'Meera Iyer',
-    'Vikram Singh',
-  ];
-  return names.map((name, i) => ({
-    id: `contact-${Date.now()}-${i}`,
-    name,
-    phone: `+91 ${9800000000 + Math.floor(Math.random() * 100000000)}`,
-    status: (['pending', 'completed', 'called', 'no_answer', 'pending'] as const)[i],
-  }));
-}
-
-// ============================================================
-// Demo seed data
-// ============================================================
-
-const DEMO_CAMPAIGNS: Omit<Campaign, 'id'>[] = [
-  {
-    name: 'COVID Booster Awareness',
-    type: 'outreach',
-    status: 'completed',
-    description: 'Informing citizens about booster dose availability at nearby PHCs',
-    targetCount: 500,
-    completedCount: 487,
-    successRate: 78,
-    script:
-      'Namaskar! This is a message from your district health department. We are calling to inform you that COVID booster doses are now available at your nearest Primary Health Centre. Would you like to know the nearest centre and available timings?',
-    language: 'hi-IN',
-    contacts: [],
-    createdAt: Date.now() - 7 * 86400000,
-  },
-  {
-    name: 'Water Quality Survey',
-    type: 'survey',
-    status: 'active',
-    description: 'Collecting feedback on drinking water quality in rural areas',
-    targetCount: 200,
-    completedCount: 134,
-    successRate: 85,
-    script:
-      'Hello, we are conducting a brief survey about water quality in your area. This will take about 2 minutes. On a scale of 1 to 5, how would you rate the quality of drinking water in your locality?',
-    language: 'en-IN',
-    contacts: [],
-    createdAt: Date.now() - 2 * 86400000,
-  },
-  {
-    name: 'Property Tax Reminder',
-    type: 'reminder',
-    status: 'draft',
-    description: 'Reminder for Q4 property tax payment deadline',
-    targetCount: 1000,
-    completedCount: 0,
-    script:
-      'This is a reminder from your municipal corporation. The deadline for Q4 property tax payment is approaching on March 31st. Please ensure timely payment to avoid penalties. Press 1 to know your outstanding amount.',
-    language: 'en-IN',
-    contacts: [],
-    createdAt: Date.now() - 86400000,
-  },
-];
 
 // ============================================================
 // Type icon component
@@ -166,11 +101,11 @@ const DEMO_CAMPAIGNS: Omit<Campaign, 'id'>[] = [
 function CampaignTypeIcon({ type }: { type: Campaign['type'] }) {
   const config = CAMPAIGN_TYPE_CONFIG[type];
   return (
-    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${config.bg}`}>
-      {type === 'survey' && <BarChart3 className={`h-5 w-5 ${config.color}`} />}
-      {type === 'outreach' && <Megaphone className={`h-5 w-5 ${config.color}`} />}
-      {type === 'reminder' && <Clock className={`h-5 w-5 ${config.color}`} />}
-      {type === 'grievance' && <FileText className={`h-5 w-5 ${config.color}`} />}
+    <div className={`flex h-12 w-12 shrink-0 items-center justify-center border-[2px] border-white/20 bg-black`}>
+      {type === 'survey' && <BarChart3 className={`h-6 w-6 stroke-[2] ${config.color}`} />}
+      {type === 'outreach' && <Megaphone className={`h-6 w-6 stroke-[2] ${config.color}`} />}
+      {type === 'reminder' && <Clock className={`h-6 w-6 stroke-[2] ${config.color}`} />}
+      {type === 'grievance' && <FileText className={`h-6 w-6 stroke-[2] ${config.color}`} />}
     </div>
   );
 }
@@ -183,12 +118,12 @@ function StatusBadge({ status }: { status: Campaign['status'] }) {
   const config = STATUS_CONFIG[status];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${config.bg} ${config.color}`}
+      className={`inline-flex items-center gap-2 border-[1px] px-2 py-1 text-[10px] font-black uppercase tracking-widest ${config.bg} ${config.color} ${status === 'active' ? 'border-transparent' : 'border-white/20'}`}
     >
       {config.pulse && (
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-black opacity-75" />
+          <span className="relative inline-flex h-full w-full rounded-none bg-black" />
         </span>
       )}
       {config.label}
@@ -205,7 +140,6 @@ export default function CampaignsPage() {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
-  const [seeded, setSeeded] = useState(false);
   const [dialingCampaignId, setDialingCampaignId] = useState<string | null>(null);
 
   // Simulation timers — track by campaign id
@@ -219,22 +153,11 @@ export default function CampaignsPage() {
   const [formTargetCount, setFormTargetCount] = useState(100);
   const [formScript, setFormScript] = useState('');
 
-  // ── Seed demo data on first render if store is empty ──
-  useEffect(() => {
-    if (!seeded && store.campaigns.length === 0) {
-      DEMO_CAMPAIGNS.forEach((demo) => {
-        store.createCampaign(demo);
-      });
-      setSeeded(true);
-    } else if (!seeded) {
-      setSeeded(true);
-    }
-  }, [seeded, store.campaigns.length, store]);
-
   // ── Cleanup timers on unmount ──
   useEffect(() => {
+    const timers = simulationTimers.current;
     return () => {
-      Object.values(simulationTimers.current).forEach(clearInterval);
+      Object.values(timers).forEach(clearInterval);
     };
   }, []);
 
@@ -251,17 +174,6 @@ export default function CampaignsPage() {
   const selectedCampaign = selectedCampaignId
     ? campaigns.find((c) => c.id === selectedCampaignId) || null
     : null;
-
-  // ── Mock contacts for detail view ──
-  const [detailContacts, setDetailContacts] = useState<
-    ReturnType<typeof generateMockContacts>
-  >([]);
-
-  useEffect(() => {
-    if (selectedCampaignId) {
-      setDetailContacts(generateMockContacts());
-    }
-  }, [selectedCampaignId]);
 
   // ── Create campaign handler ──
   const handleCreateCampaign = useCallback(() => {
@@ -360,14 +272,8 @@ export default function CampaignsPage() {
         clearInterval(simulationTimers.current[campaignId]);
         delete simulationTimers.current[campaignId];
       }
-      // Remove from store by setting status and filtering via update
-      // Since the store doesn't have a delete, we mark it completed with 0 target
-      // Actually — the store only has update, not delete. We'll filter it in the UI.
-      // For a real delete, we'd need to add a method. We'll hide it by updating a field.
-      store.updateCampaign(campaignId, {
-        status: 'completed',
-        name: `[Deleted] ${store.campaigns.find((c) => c.id === campaignId)?.name || ''}`,
-      });
+      // Truly delete from Convex
+      store.deleteCampaign(campaignId);
       if (selectedCampaignId === campaignId) {
         setSelectedCampaignId(null);
       }
@@ -375,186 +281,161 @@ export default function CampaignsPage() {
     [store, selectedCampaignId],
   );
 
-  // ── Filter out deleted campaigns ──
-  const visibleCampaigns = campaigns.filter((c) => !c.name.startsWith('[Deleted]'));
-
-  // ── Recalculate stats from visible campaigns ──
-  const visibleTotal = visibleCampaigns.length;
-  const visibleActive = visibleCampaigns.filter((c) => c.status === 'active').length;
-  const visibleCompleted = visibleCampaigns.filter((c) => c.status === 'completed').length;
-  const visibleContactsReached = visibleCampaigns.reduce((sum, c) => sum + c.completedCount, 0);
-
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="animate-in pb-20">
+      <div className="mx-auto max-w-[1400px]">
         {/* ───────────────── Header ───────────────── */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500/10">
-              <Megaphone className="h-5 w-5 text-indigo-400" />
+        <div className="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+          <div>
+            <div className="mb-4 inline-flex items-center gap-3 border-[2px] border-white/30 bg-black/50 px-5 py-2 text-sm font-bold tracking-widest uppercase">
+              <Megaphone className="h-4 w-4" />
+              BATCH OUTREACH MODULE
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">Campaigns</h1>
-              <p className="text-sm text-slate-400">
-                Create and manage outbound calling campaigns
-              </p>
-            </div>
+            <h1 className="text-5xl sm:text-7xl font-black tracking-tighter uppercase leading-none">
+              CAMPAIGNS
+            </h1>
+            <p className="mt-4 text-sm font-bold tracking-widest text-zinc-400 uppercase">
+              MANAGE HIGH-VOLUME AUTOMATED COMMUNICATIONS
+            </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-500 hover:shadow-lg hover:shadow-indigo-600/20"
+            className="glass-brutal-btn inline-flex items-center gap-3 px-8 py-4 text-lg group"
           >
-            <Plus className="h-4 w-4" />
-            New Campaign
+            <Plus className="h-5 w-5 stroke-[3] group-hover:rotate-90 transition-transform" />
+            NEW DEPLOYMENT
           </button>
         </div>
 
         {/* ───────────────── Stats Row ───────────────── */}
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800">
-                <Target className="h-4 w-4 text-slate-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{visibleTotal}</p>
-                <p className="text-xs text-slate-400">Total Campaigns</p>
-              </div>
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4 mb-12">
+          <div className="glass-brutal p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center gap-4 border-b-[2px] border-white/20 pb-4 mb-4">
+              <Target className="h-5 w-5 stroke-[2] text-zinc-500" />
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">SYSTEM TARGETS</p>
             </div>
+            <p className="text-5xl font-black tracking-tighter">{totalCampaigns}</p>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10">
-                <Play className="h-4 w-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-emerald-400">{visibleActive}</p>
-                <p className="text-xs text-slate-400">Active</p>
-              </div>
+          <div className="glass-brutal p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center gap-4 border-b-[2px] border-white/20 pb-4 mb-4">
+              <Play className="h-5 w-5 stroke-[2] fill-white" />
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">ACTIVE BATCHES</p>
             </div>
+            <p className="text-5xl font-black tracking-tighter text-white">{activeCampaigns}</p>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500/10">
-                <CheckCircle className="h-4 w-4 text-blue-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-blue-400">{visibleCompleted}</p>
-                <p className="text-xs text-slate-400">Completed</p>
-              </div>
+          <div className="glass-brutal p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center gap-4 border-b-[2px] border-white/20 pb-4 mb-4">
+              <CheckCircle className="h-5 w-5 stroke-[2] text-zinc-400" />
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">COMPLETED</p>
             </div>
+            <p className="text-5xl font-black tracking-tighter text-zinc-300">{completedCampaigns}</p>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-500/10">
-                <Users className="h-4 w-4 text-violet-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{visibleContactsReached.toLocaleString()}</p>
-                <p className="text-xs text-slate-400">Contacts Reached</p>
-              </div>
+          <div className="glass-brutal p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center gap-4 border-b-[2px] border-white/20 pb-4 mb-4">
+              <Users className="h-5 w-5 stroke-[2] text-zinc-500" />
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">CONTACT REACH</p>
             </div>
+            <p className="text-5xl font-black tracking-tighter text-zinc-100">{totalContactsReached.toLocaleString()}</p>
           </div>
         </div>
 
         {/* ───────────────── Campaign Detail View ───────────────── */}
-        {selectedCampaign && !selectedCampaign.name.startsWith('[Deleted]') && (
-          <div className="mt-6 rounded-xl border border-slate-800 bg-slate-900">
+        {selectedCampaign && (
+          <div className="mb-12 glass-brutal animate-in">
             {/* Detail header */}
-            <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between border-b-[2px] border-white/20 px-8 py-6">
+              <div className="flex items-center gap-6">
                 <CampaignTypeIcon type={selectedCampaign.type} />
                 <div>
-                  <h2 className="text-lg font-bold">{selectedCampaign.name}</h2>
-                  <div className="mt-0.5 flex items-center gap-2">
+                  <h2 className="text-3xl font-black tracking-tighter uppercase mb-2">{selectedCampaign.name}</h2>
+                  <div className="flex items-center gap-4">
                     <StatusBadge status={selectedCampaign.status} />
-                    <span className="text-xs text-slate-500">
-                      Created {formatDate(selectedCampaign.createdAt)}
+                    <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase border-l-[2px] border-zinc-700 pl-4">
+                      INIT: {formatDate(selectedCampaign.createdAt)}
                     </span>
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedCampaignId(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                className="text-[10px] font-bold tracking-widest text-zinc-500 hover:text-white transition-colors flex items-center gap-2 uppercase"
               >
-                <X className="h-5 w-5" />
+                [X] CLOSE
               </button>
             </div>
 
-            <div className="p-6">
-              <div className="grid gap-6 lg:grid-cols-2">
+            <div className="p-8">
+              <div className="grid gap-8 lg:grid-cols-2">
                 {/* Left — Info */}
-                <div className="space-y-5">
+                <div className="space-y-8">
                   {/* Description */}
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                      Description
+                  <div className="border-[2px] border-white/20 p-6 bg-black">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b-[2px] border-white/20 pb-4 mb-4">
+                      OBJECTIVE // DESCRIPTION
                     </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
-                      {selectedCampaign.description || 'No description provided.'}
+                    <p className="text-sm font-bold uppercase tracking-widest leading-loose text-white">
+                      {selectedCampaign.description || 'NO DESCRIPTION CONFIGURED.'}
                     </p>
                   </div>
 
                   {/* Meta grid */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-lg bg-slate-800/50 p-3">
-                      <p className="text-xs text-slate-500">Language</p>
-                      <p className="mt-0.5 flex items-center gap-1.5 text-sm font-medium text-slate-200">
-                        <Globe className="h-3.5 w-3.5 text-indigo-400" />
-                        {LANG_NAME_MAP[selectedCampaign.language] || selectedCampaign.language}
+                  <div className="grid grid-cols-2 gap-6 relative">
+                    <div className="border-[2px] border-white/20 p-4 bg-black">
+                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 border-b-[1px] border-zinc-700 pb-2">LOCALE</p>
+                      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white mt-4">
+                        <Globe className="h-4 w-4" />
+                        {LANG_NAME_MAP[selectedCampaign.language] || selectedCampaign.language.toUpperCase()}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-slate-800/50 p-3">
-                      <p className="text-xs text-slate-500">Type</p>
-                      <p className={`mt-0.5 text-sm font-medium ${CAMPAIGN_TYPE_CONFIG[selectedCampaign.type].color}`}>
+                    <div className="border-[2px] border-white/20 p-4 bg-black">
+                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 border-b-[1px] border-zinc-700 pb-2">TYPE</p>
+                      <p className="text-xs font-bold uppercase tracking-widest text-white mt-4">
                         {CAMPAIGN_TYPE_CONFIG[selectedCampaign.type].label}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-slate-800/50 p-3">
-                      <p className="text-xs text-slate-500">Progress</p>
-                      <p className="mt-0.5 text-sm font-medium text-slate-200">
-                        {selectedCampaign.completedCount} / {selectedCampaign.targetCount}
+                    <div className="border-[2px] border-white/20 p-4 bg-black">
+                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 border-b-[1px] border-zinc-700 pb-2">BURNDOWN</p>
+                      <p className="text-xs font-bold uppercase tracking-widest text-white mt-4 flex justify-between">
+                        <span>{selectedCampaign.completedCount}</span> / <span>{selectedCampaign.targetCount}</span>
                       </p>
                     </div>
-                    <div className="rounded-lg bg-slate-800/50 p-3">
-                      <p className="text-xs text-slate-500">Success Rate</p>
-                      <p className="mt-0.5 text-sm font-medium text-emerald-400">
+                    <div className="border-[2px] border-white/20 p-4 bg-black relative">
+                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 border-b-[1px] border-zinc-700 pb-2">YIELD RATE</p>
+                      <p className="text-2xl font-black uppercase tracking-tighter text-white mt-4">
                         {selectedCampaign.successRate != null
                           ? `${selectedCampaign.successRate}%`
-                          : '—'}
+                          : '--'}
                       </p>
                     </div>
                   </div>
 
                   {/* Progress bar */}
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between text-xs text-slate-400">
-                      <span>Campaign Progress</span>
+                  <div className="border-[2px] border-white/20 p-6 bg-black">
+                    <div className="mb-4 flex items-center justify-between text-[10px] font-black tracking-widest text-zinc-500 uppercase border-b-[2px] border-zinc-700 pb-2">
+                      <span>EXECUTION PROGRESS</span>
                       <span>
                         {selectedCampaign.targetCount > 0
                           ? Math.round(
-                              (selectedCampaign.completedCount / selectedCampaign.targetCount) *
-                                100,
-                            )
+                            (selectedCampaign.completedCount / selectedCampaign.targetCount) *
+                            100,
+                          )
                           : 0}
                         %
                       </span>
                     </div>
-                    <div className="h-3 w-full overflow-hidden rounded-full bg-slate-700">
+                    <div className="h-6 w-full border-[1px] border-white/30 bg-black p-1">
                       <div
-                        className={`h-full rounded-full transition-all duration-500 ${CAMPAIGN_TYPE_CONFIG[selectedCampaign.type].barColor}`}
+                        className={`h-full bg-white transition-all duration-500 ease-out`}
                         style={{
-                          width: `${
-                            selectedCampaign.targetCount > 0
-                              ? Math.min(
-                                  (selectedCampaign.completedCount /
-                                    selectedCampaign.targetCount) *
-                                    100,
-                                  100,
-                                )
-                              : 0
-                          }%`,
+                          width: `${selectedCampaign.targetCount > 0
+                            ? Math.min(
+                              (selectedCampaign.completedCount /
+                                selectedCampaign.targetCount) *
+                              100,
+                              100,
+                            )
+                            : 0
+                            }%`,
                         }}
                       />
                     </div>
@@ -563,91 +444,44 @@ export default function CampaignsPage() {
                   {/* Action button */}
                   {(selectedCampaign.status === 'draft' ||
                     selectedCampaign.status === 'paused') && (
-                    <button
-                      onClick={() => startCampaignSimulation(selectedCampaign.id)}
-                      disabled={dialingCampaignId === selectedCampaign.id}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-emerald-500 disabled:opacity-60"
-                    >
-                      {dialingCampaignId === selectedCampaign.id ? (
-                        <>
-                          <Phone className="h-4 w-4 animate-pulse" />
-                          Dialing...
-                        </>
-                      ) : (
-                        <>
-                          <Play className="h-4 w-4" />
-                          Start Campaign
-                        </>
-                      )}
-                    </button>
-                  )}
+                      <button
+                        onClick={() => startCampaignSimulation(selectedCampaign.id)}
+                        disabled={dialingCampaignId === selectedCampaign.id}
+                        className="w-full glass-brutal-btn border-white px-6 py-6 text-xl flex items-center justify-center gap-4 bg-white text-black active:translate-y-0 disabled:opacity-50"
+                      >
+                        {dialingCampaignId === selectedCampaign.id ? (
+                          <>
+                            <Phone className="h-6 w-6 stroke-[3] animate-pulse" />
+                            INITIATING...
+                          </>
+                        ) : (
+                          <>
+                            <Play className="h-6 w-6 stroke-[3] fill-black" />
+                            DEPLOY CAMPAIGN BATCH
+                          </>
+                        )}
+                      </button>
+                    )}
                   {selectedCampaign.status === 'active' && (
                     <button
                       onClick={() => pauseCampaign(selectedCampaign.id)}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-amber-500"
+                      className="w-full border-[2px] border-white px-6 py-6 text-xl flex items-center justify-center gap-4 text-white hover:bg-white hover:text-black transition-colors bg-zinc-900 font-black tracking-tighter uppercase"
                     >
-                      <Pause className="h-4 w-4" />
-                      Pause Campaign
+                      <Pause className="h-6 w-6 stroke-[3] fill-current" />
+                      HALT EXECUTION
                     </button>
                   )}
                 </div>
 
-                {/* Right — Script + Contacts */}
-                <div className="space-y-5">
-                  {/* Script */}
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                      AI Script
-                    </h3>
-                    <div className="mt-1.5 rounded-lg border border-slate-700 bg-slate-800 p-4">
-                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
-                        {selectedCampaign.script || 'No script defined.'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Simulated contacts */}
-                  <div>
-                    <h3 className="mb-1.5 text-xs font-medium uppercase tracking-wider text-slate-500">
-                      Contacts Sample
-                    </h3>
-                    <div className="space-y-2">
-                      {detailContacts.map((contact) => {
-                        const statusColors: Record<string, string> = {
-                          pending: 'text-slate-400 bg-slate-500/15',
-                          called: 'text-blue-400 bg-blue-500/15',
-                          completed: 'text-emerald-400 bg-emerald-500/15',
-                          failed: 'text-red-400 bg-red-500/15',
-                          no_answer: 'text-amber-400 bg-amber-500/15',
-                        };
-                        return (
-                          <div
-                            key={contact.id}
-                            className="flex items-center justify-between rounded-lg border border-slate-700/50 bg-slate-800/50 px-4 py-2.5"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700 text-xs font-medium text-slate-300">
-                                {contact.name
-                                  .split(' ')
-                                  .map((n) => n[0])
-                                  .join('')}
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-slate-200">
-                                  {contact.name}
-                                </p>
-                                <p className="text-xs text-slate-500">{contact.phone}</p>
-                              </div>
-                            </div>
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[contact.status] || statusColors.pending}`}
-                            >
-                              {contact.status.replace('_', ' ')}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
+                {/* Right — Script */}
+                <div className="flex flex-col h-full border-[2px] border-white/20 p-6 bg-black">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b-[2px] border-white/20 pb-4 mb-4">
+                    AI INSTRUCTION PAYLOAD
+                  </h3>
+                  <div className="flex-1 rounded-none border-[1px] border-dashed border-zinc-700 bg-zinc-950 p-6 overflow-y-auto">
+                    <p className="whitespace-pre-wrap text-xs font-bold uppercase tracking-widest leading-loose text-zinc-400 font-mono">
+                      {selectedCampaign.script || '< EMPTY SCRIPT >'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -656,57 +490,58 @@ export default function CampaignsPage() {
         )}
 
         {/* ───────────────── Campaign List ───────────────── */}
-        <div className="mt-6">
-          {visibleCampaigns.length === 0 ? (
+        <div className="mt-12">
+          {campaigns.length === 0 ? (
             /* Empty state */
-            <div className="flex flex-col items-center justify-center rounded-xl border border-slate-800 bg-slate-900 px-6 py-20 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-800">
-                <Megaphone className="h-8 w-8 text-slate-600" />
+            <div className="glass-brutal flex flex-col items-center justify-center px-8 py-32 text-center">
+              <div className="flex h-24 w-24 items-center justify-center border-[2px] border-zinc-700 bg-zinc-900 mb-8">
+                <Megaphone className="h-10 w-10 text-zinc-500 stroke-[1]" />
               </div>
-              <h3 className="mt-5 text-lg font-semibold text-slate-300">No campaigns yet</h3>
-              <p className="mt-1.5 max-w-sm text-sm text-slate-500">
-                Create your first outbound calling campaign to reach citizens at scale with
-                AI-powered voice calls.
+              <h3 className="text-4xl font-black tracking-tighter uppercase text-white mb-4">NO BATCHES SCHEDULED</h3>
+              <p className="max-w-xl text-sm font-bold tracking-widest uppercase text-zinc-500 leading-relaxed mx-auto border-t-[2px] border-zinc-800 pt-6">
+                ORCHESTRATE HIGH-VOLUME AUTOMATED CALL CAMPAIGNS.
+                DESIGNATE A TARGET AUDIENCE AND DEPLOY INSTANTANEOUSLY.
               </p>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-500"
+                className="mt-12 glass-brutal-btn inline-flex items-center gap-4 px-10 py-5"
               >
-                <Plus className="h-4 w-4" />
-                Create Your First Campaign
+                <Plus className="h-5 w-5 stroke-[3]" />
+                INITIALIZE GENESIS BATCH
               </button>
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {visibleCampaigns.map((campaign) => {
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {campaigns.map((campaign, idx) => {
                 const typeConfig = CAMPAIGN_TYPE_CONFIG[campaign.type];
                 const progress =
                   campaign.targetCount > 0
                     ? Math.round(
-                        (campaign.completedCount / campaign.targetCount) * 100,
-                      )
+                      (campaign.completedCount / campaign.targetCount) * 100,
+                    )
                     : 0;
 
                 return (
                   <div
                     key={campaign.id}
-                    className={`group relative rounded-xl border bg-slate-900 transition-all hover:border-slate-700 ${
-                      selectedCampaignId === campaign.id
-                        ? 'border-indigo-500/50 ring-1 ring-indigo-500/20'
-                        : 'border-slate-800'
-                    }`}
+                    className={`group relative glass-brutal flex flex-col transition-all cursor-pointer ${selectedCampaignId === campaign.id
+                      ? 'border-white bg-zinc-900'
+                      : 'border-white/20 hover:border-white/50'
+                      }`}
+                    style={{ animationDelay: `${idx * 80}ms` }}
+                    onClick={() => setSelectedCampaignId(selectedCampaignId === campaign.id ? null : campaign.id)}
                   >
-                    <div className="p-5">
+                    <div className="p-6 flex-1">
                       {/* Top row: icon + name + status */}
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-4 mb-6">
                         <CampaignTypeIcon type={campaign.type} />
                         <div className="min-w-0 flex-1">
-                          <h3 className="truncate text-sm font-semibold text-white">
+                          <h3 className="truncate text-lg font-black tracking-widest text-white uppercase">
                             {campaign.name}
                           </h3>
-                          <div className="mt-1 flex items-center gap-2">
+                          <div className="mt-2 flex items-center gap-3">
                             <StatusBadge status={campaign.status} />
-                            <span className={`text-xs ${typeConfig.color}`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest text-zinc-500`}>
                               {typeConfig.label}
                             </span>
                           </div>
@@ -714,106 +549,86 @@ export default function CampaignsPage() {
                       </div>
 
                       {/* Description */}
-                      <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-slate-400">
-                        {campaign.description || 'No description'}
+                      <p className="mt-4 line-clamp-2 text-xs font-bold leading-relaxed text-zinc-500 uppercase tracking-widest border-l-[2px] border-zinc-700 pl-3 min-h-[40px]">
+                        {campaign.description || 'N/A'}
                       </p>
 
                       {/* Progress bar */}
-                      <div className="mt-4">
-                        <div className="mb-1 flex items-center justify-between text-xs">
-                          <span className="text-slate-500">
-                            {campaign.completedCount.toLocaleString()} /{' '}
-                            {campaign.targetCount.toLocaleString()}
-                          </span>
-                          <span className="text-slate-400">{progress}%</span>
+                      <div className="mt-6 border-[2px] border-white/10 p-4 bg-black">
+                        <div className="mb-2 flex items-center justify-between text-[10px] font-black tracking-widest uppercase text-zinc-500">
+                          <span>{campaign.completedCount} / {campaign.targetCount}</span>
+                          <span className="text-white">{progress}%</span>
                         </div>
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-700">
+                        <div className="h-2 w-full bg-zinc-900 border-[1px] border-zinc-700 overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all duration-500 ${typeConfig.barColor}`}
-                            style={{
-                              width: `${Math.min(progress, 100)}%`,
-                            }}
+                            className={`h-full ${typeConfig.barColor} transition-all duration-500 ease-out`}
+                            style={{ width: `${Math.min(progress, 100)}%` }}
                           />
                         </div>
                       </div>
 
                       {/* Meta row */}
-                      <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
+                      <div className="mt-4 flex items-center gap-4 text-[10px] font-black tracking-widest uppercase text-zinc-500 pt-4 border-t-[1px] border-white/10">
                         <span className="flex items-center gap-1">
                           <Globe className="h-3 w-3" />
-                          {LANG_NAME_MAP[campaign.language] || campaign.language}
+                          {LANG_NAME_MAP[campaign.language] || campaign.language.substring(0, 2)}
                         </span>
                         {campaign.successRate != null && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 border-l-[1px] border-zinc-700 pl-4">
                             <BarChart3 className="h-3 w-3" />
-                            {campaign.successRate}% success
+                            {campaign.successRate}% YIELD
                           </span>
                         )}
                       </div>
-
-                      <p className="mt-2 text-xs text-slate-600">
-                        Created {formatDate(campaign.createdAt)}
-                      </p>
                     </div>
 
                     {/* Actions bar */}
-                    <div className="flex items-center border-t border-slate-800 px-5 py-3">
-                      {(campaign.status === 'draft' || campaign.status === 'paused') && (
+                    <div className="flex items-center justify-between border-t-[2px] border-white/20 p-4 bg-black group-hover:bg-zinc-900 transition-colors">
+                      <div className="flex gap-2">
+                        {(campaign.status === 'draft' || campaign.status === 'paused') && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              startCampaignSimulation(campaign.id);
+                            }}
+                            disabled={dialingCampaignId === campaign.id}
+                            className="border-[1px] border-white p-2 hover:bg-white hover:text-black transition-colors text-white disabled:opacity-50"
+                          >
+                            {dialingCampaignId === campaign.id ? (
+                              <Phone className="h-4 w-4 animate-pulse stroke-[3]" />
+                            ) : (
+                              <Play className="h-4 w-4 stroke-[3] fill-current" />
+                            )}
+                          </button>
+                        )}
+                        {campaign.status === 'active' && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              pauseCampaign(campaign.id);
+                            }}
+                            className="border-[1px] border-white p-2 hover:bg-white hover:text-black transition-colors text-white"
+                          >
+                            <Pause className="h-4 w-4 stroke-[3] fill-current" />
+                          </button>
+                        )}
+
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            startCampaignSimulation(campaign.id);
+                            deleteCampaign(campaign.id);
                           }}
-                          disabled={dialingCampaignId === campaign.id}
-                          className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-emerald-400 transition-colors hover:bg-emerald-500/10 disabled:opacity-50"
+                          className="border-[1px] border-zinc-700 p-2 text-zinc-500 hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors ml-2"
+                          title="TERMINATE"
                         >
-                          {dialingCampaignId === campaign.id ? (
-                            <>
-                              <Phone className="h-3.5 w-3.5 animate-pulse" />
-                              Dialing...
-                            </>
-                          ) : (
-                            <>
-                              <Play className="h-3.5 w-3.5" />
-                              Start
-                            </>
-                          )}
+                          <Trash2 className="h-4 w-4 stroke-[2]" />
                         </button>
-                      )}
-                      {campaign.status === 'active' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            pauseCampaign(campaign.id);
-                          }}
-                          className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/10"
-                        >
-                          <Pause className="h-3.5 w-3.5" />
-                          Pause
-                        </button>
-                      )}
+                      </div>
 
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedCampaignId(
-                            selectedCampaignId === campaign.id ? null : campaign.id,
-                          );
-                        }}
-                        className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                        className="text-[10px] font-black tracking-widest uppercase text-zinc-400 hover:text-white transition-colors flex items-center gap-1"
                       >
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        Details
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteCampaign(campaign.id);
-                        }}
-                        className="ml-auto flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/10"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <ChevronRight className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -826,108 +641,104 @@ export default function CampaignsPage() {
 
       {/* ───────────────── Create Campaign Modal ───────────────── */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setShowCreateModal(false)}
           />
 
-          {/* Modal */}
-          <div className="relative mx-4 w-full max-w-xl rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl">
-            {/* Modal header */}
-            <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10">
-                  <Megaphone className="h-4 w-4 text-indigo-400" />
-                </div>
-                <h2 className="text-lg font-bold">New Campaign</h2>
+          <div className="relative w-full max-w-2xl glass-brutal bg-black animate-in shadow-[15px_15px_0px_white] z-10 flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between border-b-[2px] border-white/20 px-8 py-6 flex-shrink-0 bg-zinc-950">
+              <div className="flex items-center gap-4">
+                <Megaphone className="h-6 w-6 stroke-[3]" />
+                <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">NEW BATCH COMMS</h2>
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                className="text-[10px] font-bold tracking-widest uppercase text-zinc-500 hover:text-white"
               >
-                <X className="h-5 w-5" />
+                [X]
               </button>
             </div>
 
-            {/* Modal body */}
-            <div className="max-h-[70vh] overflow-y-auto p-6">
-              <div className="space-y-5">
-                {/* Campaign Name */}
-                <div>
-                  <label
-                    htmlFor="campaign-name"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
-                  >
-                    Campaign Name
-                  </label>
-                  <input
-                    id="campaign-name"
-                    type="text"
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    placeholder="e.g., Vaccination Drive Outreach"
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </div>
+            <div className="overflow-y-auto p-8 space-y-8">
+              {/* Campaign Name */}
+              <div>
+                <label
+                  htmlFor="campaign-name"
+                  className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
+                >
+                  OPERATION ID // NAME
+                </label>
+                <input
+                  id="campaign-name"
+                  type="text"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="EX: ALPHA OUTREACH Q1"
+                  className="w-full border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white placeholder:text-zinc-600 outline-none focus:border-white transition-colors"
+                />
+              </div>
 
-                {/* Campaign Type */}
-                <div>
-                  <label
-                    htmlFor="campaign-type"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
-                  >
-                    Type
-                  </label>
-                  <select
-                    id="campaign-type"
-                    value={formType}
-                    onChange={(e) => setFormType(e.target.value as Campaign['type'])}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  >
-                    <option value="survey">Survey</option>
-                    <option value="outreach">Outreach</option>
-                    <option value="reminder">Reminder</option>
-                    <option value="grievance">Grievance</option>
-                  </select>
-                </div>
+              {/* Campaign Type */}
+              <div>
+                <label
+                  htmlFor="campaign-type"
+                  className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
+                >
+                  VECTOR
+                </label>
+                <select
+                  id="campaign-type"
+                  value={formType}
+                  onChange={(e) => setFormType(e.target.value as Campaign['type'])}
+                  className="w-full border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white outline-none focus:border-white appearance-none"
+                  style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>')`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center' }}
+                >
+                  <option value="survey" className="bg-black text-white">SYSTEM SURVEY</option>
+                  <option value="outreach" className="bg-black text-white">COLD OUTREACH</option>
+                  <option value="reminder" className="bg-black text-white">COMPLIANCE REMINDER</option>
+                  <option value="grievance" className="bg-black text-white">GRIEVANCE CAPTURE</option>
+                </select>
+              </div>
 
-                {/* Description */}
-                <div>
-                  <label
-                    htmlFor="campaign-desc"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
-                  >
-                    Description
-                  </label>
-                  <textarea
-                    id="campaign-desc"
-                    value={formDescription}
-                    onChange={(e) => setFormDescription(e.target.value)}
-                    placeholder="Brief description of the campaign objective"
-                    rows={3}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </div>
+              {/* Description */}
+              <div>
+                <label
+                  htmlFor="campaign-desc"
+                  className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
+                >
+                  PARAMETERS // BRIEFING
+                </label>
+                <textarea
+                  id="campaign-desc"
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                  placeholder="DELINEATE MISSION OBJECTIVES..."
+                  rows={3}
+                  className="w-full resize-y border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white placeholder:text-zinc-600 outline-none focus:border-white transition-colors"
+                />
+              </div>
 
+              <div className="grid grid-cols-2 gap-6">
                 {/* Language */}
                 <div>
                   <label
                     htmlFor="campaign-lang"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
+                    className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
                   >
-                    Language
+                    LANGUAGE PROTOCOL
                   </label>
                   <select
                     id="campaign-lang"
                     value={formLanguage}
                     onChange={(e) => setFormLanguage(e.target.value)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    className="w-full border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white outline-none focus:border-white transition-colors appearance-none"
+                    style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>')`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center' }}
                   >
                     {SUPPORTED_LANGUAGES.map((lang) => (
-                      <option key={lang.code} value={lang.code}>
-                        {lang.nativeName} — {lang.name}
+                      <option key={lang.code} value={lang.code} className="bg-black text-white">
+                        {lang.nativeName}
                       </option>
                     ))}
                   </select>
@@ -937,57 +748,53 @@ export default function CampaignsPage() {
                 <div>
                   <label
                     htmlFor="campaign-target"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
+                    className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
                   >
-                    Target Count
+                    VOLUME CAP
                   </label>
                   <input
                     id="campaign-target"
                     type="number"
-                    min={1}
                     value={formTargetCount}
-                    onChange={(e) =>
-                      setFormTargetCount(Math.max(1, parseInt(e.target.value) || 1))
-                    }
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  />
-                </div>
-
-                {/* AI Script */}
-                <div>
-                  <label
-                    htmlFor="campaign-script"
-                    className="mb-1.5 block text-sm font-medium text-slate-300"
-                  >
-                    AI Script
-                  </label>
-                  <textarea
-                    id="campaign-script"
-                    value={formScript}
-                    onChange={(e) => setFormScript(e.target.value)}
-                    placeholder={`Example:\nNamaskar! This is an automated call from [Department Name]. We are reaching out to inform you about [Topic]. Would you like to hear more details?\n\nPress 1 for Yes, 2 for No.`}
-                    rows={6}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    onChange={(e) => setFormTargetCount(Number(e.target.value))}
+                    min={1}
+                    className="w-full border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white outline-none focus:border-white font-mono"
                   />
                 </div>
               </div>
+
+              {/* Script */}
+              <div>
+                <label
+                  htmlFor="campaign-script"
+                  className="mb-2 block text-[10px] font-black tracking-widest uppercase text-zinc-500"
+                >
+                  SYSTEM PAYLOAD // SCRIPT OVERRIDES
+                </label>
+                <textarea
+                  id="campaign-script"
+                  value={formScript}
+                  onChange={(e) => setFormScript(e.target.value)}
+                  placeholder="> INJECT CUSTOM DIRECTIVES HERE"
+                  rows={4}
+                  className="w-full resize-y border-[2px] border-white/20 bg-zinc-900 px-6 py-4 text-sm font-bold tracking-widest uppercase text-white placeholder:text-zinc-600 outline-none focus:border-white font-mono"
+                />
+              </div>
             </div>
 
-            {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-slate-800 px-6 py-4">
+            <div className="flex items-center gap-4 border-t-[2px] border-white/20 p-8 flex-shrink-0 bg-black">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                className="flex-1 glass-brutal-btn-alt py-5 text-sm"
               >
-                Cancel
+                ABORT CONFIG
               </button>
               <button
                 onClick={handleCreateCampaign}
                 disabled={!formName.trim()}
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 glass-brutal-btn bg-white text-black py-5 text-sm disabled:opacity-50 hover:bg-zinc-200"
               >
-                <Plus className="h-4 w-4" />
-                Create Campaign
+                COMMIT BATCH
               </button>
             </div>
           </div>
